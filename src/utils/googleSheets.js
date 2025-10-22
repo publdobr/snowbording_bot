@@ -58,7 +58,7 @@ const getSheetData = async (sheetTitle) => {
 
     return data;
   } catch (error) {
-    console.error('Ошибка при получении данных из Google Sheets:', error.message);
+    console.error('Ошибка при получении данных из Google Sheets:', error);
     return [];
   }
 };
