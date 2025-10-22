@@ -1,7 +1,9 @@
-const { Markup } = require('telegraf');
+const { Markup, Input } = require('telegraf');
+const path = require('path');
 
 const start = (ctx) => {
-  ctx.replyWithPhoto('https://funcarve.ru/wp-content/uploads/logo-blue.png', {
+  const logoPath = path.resolve(__dirname, '..', 'assets', 'logo.png');
+  ctx.replyWithPhoto(Input.fromLocalFile(logoPath), {
     caption: 'Что ищем: курс или доску?',
     ...Markup.inlineKeyboard([
       [Markup.button.callback('🎓 Курсы и запись', 'courses')],
