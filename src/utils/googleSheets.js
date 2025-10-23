@@ -1,4 +1,5 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
+require('dotenv').config();
 
 // ID вашей таблицы Google
 const SPREADSHEET_ID = '1O9dpdrVOTW37ID3Y_RGAUTVJDBXRa3E3GW8O-jO8z6Q';
@@ -8,9 +9,13 @@ const getSheetData = async (sheetTitle) => {
   try {
     let credentials;
     try {
-      credentials = require('../credentials.json');
+      if (!process.env.GOOGLE_CREDENTIALS_JSON || process.env.GOOGLE_CREDENTIALS_JSON === '""') {
+        console.error('Ошибка: GOOGLE_CREDENTIALS_JSON не установлен или пуст в файле .env. Пожалуйста, убедитесь, что вы предоставили действительные учетные данные в формате JSON.');
+        return [];
+      }
+      credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
     } catch (error) {
-      console.error('Ошибка: файл credentials.json не найден. Убедитесь, что он существует в корневой директории.');
+      console.error('Ошибка: Не удалось загрузить или распарсить учетные данные из GOOGLE_CREDENTIALS_JSON.', error);
       return [];
     }
 
