@@ -7,22 +7,14 @@ const SPREADSHEET_ID = '1O9dpdrVOTW37ID3Y_RGAUTVJDBXRa3E3GW8O-jO8z6Q';
 // Функция для получения данных из Google Sheets
 const getSheetData = async (sheetTitle) => {
   try {
-    let credentials;
-    try {
-      if (!process.env.GOOGLE_CREDENTIALS_JSON || process.env.GOOGLE_CREDENTIALS_JSON === '""') {
-        console.error('Ошибка: GOOGLE_CREDENTIALS_JSON не установлен или пуст в файле .env. Пожалуйста, убедитесь, что вы предоставили действительные учетные данные в формате JSON.');
-        return [];
-      }
-      credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
-    } catch (error) {
-      console.error('Ошибка: Не удалось загрузить или распарсить учетные данные из GOOGLE_CREDENTIALS_JSON.', error);
-      return [];
-    }
-
     const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
 
     // Аутентификация с использованием ключа сервисного аккаунта
-    await doc.useServiceAccountAuth(credentials);
+    // Загрузка учетных данных из переменной окружения GOOGLE_APPLICATION_CREDENTIALS
+    await doc.useServiceAccountAuth({
+      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    });
 
     // Загрузка информации о документе
     await doc.loadInfo();
