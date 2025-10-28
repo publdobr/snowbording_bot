@@ -27,12 +27,14 @@
 ```
 BOT_TOKEN=<ваш_токен_бота>
 MANAGER_CHAT_ID=<id_чата_менеджера>
+GOOGLE_SHEET_ID=<id_вашей_таблицы>
 GOOGLE_SERVICE_ACCOUNT_EMAIL=<email_сервисного_аккаунта>
 GOOGLE_PRIVATE_KEY=<приватный_ключ_сервисного_аккаунта>
 ```
 
 - `BOT_TOKEN`: Токен вашего телеграм-бота.
 - `MANAGER_CHAT_ID`: ID чата для отправки уведомлений менеджеру.
+- `GOOGLE_SHEET_ID`: ID вашей Google Таблицы.
 - `GOOGLE_SERVICE_ACCOUNT_EMAIL`: Email сервисного аккаунта Google для доступа к Google Sheets.
 - `GOOGLE_PRIVATE_KEY`: Приватный ключ сервисного аккаунта Google.
 
