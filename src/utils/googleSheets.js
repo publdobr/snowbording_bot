@@ -2,7 +2,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 require('dotenv').config();
 
 // ID вашей таблицы Google
-const SPREADSHEET_ID = '1O9dpdrVOTW37ID3Y_RGAUTVJDBXRa3E3GW8O-jO8z6Q';
+const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
 
 // Функция для получения данных из Google Sheets
 const getSheetData = async (sheetTitle) => {
