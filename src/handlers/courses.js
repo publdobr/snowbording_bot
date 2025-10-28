@@ -39,11 +39,30 @@ const coursesScene = new Scenes.WizardScene(
   },
   // Шаг 3: Выбор значения фильтра
   async (ctx) => {
-    const filterType = ctx.callbackQuery.data.split('_')[1];
+    const filterType = ctx.callbackQuery.data.split('_')[1]; // 'city', 'dates', or 'course'
     const courses = ctx.wizard.state.courses;
-    const filterValues = [...new Set(courses.map(course => course[filterType.charAt(0).toUpperCase() + filterType.slice(1)]))];
 
-    ctx.reply(`Выберите ${filterType}:`, Markup.inlineKeyboard(
+    const filterMap = {
+      city: { column: 'Город', reply: 'город' },
+      dates: { column: 'Даты', reply: 'даты' },
+      course: { column: 'Курс', reply: 'курс' },
+    };
+
+    const filterConfig = filterMap[filterType];
+
+    if (!filterConfig) {
+      ctx.reply('Произошла ошибка с выбором фильтра. Попробуйте, пожалуйста, еще раз.');
+      return ctx.scene.leave();
+    }
+
+    const filterValues = [...new Set(courses.map(course => course[filterConfig.column]))].filter(Boolean);
+
+    if (filterValues.length === 0) {
+      ctx.reply('Не найдено доступных опций для этого фильтра. Попробуйте другой.');
+      return ctx.scene.leave();
+    }
+
+    ctx.reply(`Выберите ${filterConfig.reply}:`, Markup.inlineKeyboard(
       filterValues.map(value => [Markup.button.callback(value, `select_${filterType}_${value}`)])
     ));
 
@@ -53,7 +72,26 @@ const coursesScene = new Scenes.WizardScene(
   async (ctx) => {
     const [,, filterType, filterValue] = ctx.callbackQuery.data.split('_');
     const courses = ctx.wizard.state.courses;
-    const filteredCourses = courses.filter(course => course[filterType.charAt(0).toUpperCase() + filterType.slice(1)] === filterValue);
+
+    const filterMap = {
+        city: { column: 'Город' },
+        dates: { column: 'Даты' },
+        course: { column: 'Курс' },
+    };
+
+    const filterConfig = filterMap[filterType];
+
+    if (!filterConfig) {
+      ctx.reply('Произошла ошибка с применением фильтра. Попробуйте, пожалуйста, еще раз.');
+      return ctx.scene.leave();
+    }
+
+    const filteredCourses = courses.filter(course => course[filterConfig.column] === filterValue);
+
+    if (filteredCourses.length === 0) {
+        ctx.reply('К сожалению, по вашему запросу ничего не найдено. Попробуйте другие фильтры.');
+        return ctx.scene.leave();
+    }
 
     ctx.wizard.state.selectedCourses = filteredCourses;
 
